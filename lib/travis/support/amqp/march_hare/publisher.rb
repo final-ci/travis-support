@@ -16,14 +16,24 @@ module Travis
         @options = options.dup
         @name = @options.delete(:name) || ""
         @type = @options.delete(:type) || "direct"
+        @shared_channel = @options.delete :unique_channel
+        @dont_retry = @options.delete :dont_retry
       end
 
       def publish(data, options = {})
         data = MultiJson.encode(data)
         defaults = { :routing_key => routing_key, :properties => { :message_id => rand(100000000000).to_s } }
-        retrying do
+        if @dont_retry
           exchange.publish(data, deep_merge(defaults, options))
+        else
+          retrying do
+            exchange.publish(data, deep_merge(defaults, options))
+          end
         end
+      end
+
+      def channel
+        @channel ||= @unique_channel ? Amqp.connection.create_channel : self.class.channel
       end
 
       protected
