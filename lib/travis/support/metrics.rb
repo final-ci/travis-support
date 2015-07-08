@@ -4,19 +4,19 @@ module Travis
   module Metrics
     module Reporter
       class << self
-        def librato
+        def librato(config = Travis.config)
           require 'metriks/librato_metrics_reporter'
-          return unless config = Travis.config.librato
+          return unless config = config.librato
           puts 'Starting Librato Metriks reporter'
-          source = Travis.config.librato_source
+          source = config.librato_source
           source = "#{source}.#{ENV['DYNO']}" if ENV.key?('DYNO')
           on_error = proc {|ex| puts "librato error: #{ex.message} (#{ex.response.body})"}
           Metriks::LibratoMetricsReporter.new(config.email, config.token, source: source, on_error: on_error)
         end
 
-        def graphite
+        def graphite(config = Travis.config)
           require 'metriks/reporter/graphite'
-          options = Travis.config.graphite || {}
+          options = config.graphite || {}
           host, port = options.values_at(:host, :port)
           Metriks::Reporter::Graphite.new(host, port)
         end
@@ -28,10 +28,10 @@ module Travis
     class << self
       attr_reader :reporter
 
-      def setup(adapter = nil)
-        if adapter ||= Travis.config.metrics.try(:reporter)
+      def setup(adapter = nil, config = Travis.config)
+        if adapter ||= config.metrics.try(:reporter)
           Travis.logger.info("Starting metriks reporter #{adapter}.")
-          @reporter = Reporter.send(adapter)
+          @reporter = Reporter.send(adapter, config)
         end
 
         if reporter
