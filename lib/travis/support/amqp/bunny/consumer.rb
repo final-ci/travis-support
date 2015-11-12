@@ -23,6 +23,10 @@ module Travis
           @channel.ack(@delivery_info.delivery_tag)
         end
 
+        def reject(opts)
+          @channel.reject(@delivery_info.delivery_tag, !!opts[:requeue])
+        end
+
         def properties
           ProperiesWrapper[@properties]
         end
