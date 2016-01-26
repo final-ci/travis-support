@@ -23,7 +23,10 @@ module Travis
 
       def publish(data, options = {})
         data = MultiJson.encode(data)
-        exchange.publish(data, deep_merge(default_data, options))
+        metadata = deep_merge(default_metadata, options)
+        properties_field = metadata.delete(:properties)
+        metadata.merge!(properties_field) unless properties_field.nil?
+        exchange.publish(data, metadata)
         track_event
       rescue StandardError => e
         Exceptions.handle(e)
@@ -38,8 +41,8 @@ module Travis
 
       protected
 
-        def default_data
-          { :routing_key => routing_key , :properties => { :message_id => rand(100000000000).to_s } }
+        def default_metadata
+          { :routing_key => routing_key , :message_id => rand(100000000000).to_s }
         end
 
         def exchange

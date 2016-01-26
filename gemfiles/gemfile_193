@@ -10,17 +10,10 @@ gem 'gem-patching'
 gem 'metriks',         :git => 'https://github.com/roidrage/metriks.git', :ref => 'source'
 gem 'sentry-raven',    :github => 'getsentry/raven-ruby'
 
-platform :mri do
-  gem 'amq-client',    '>= 0.9.0'
-  gem 'amqp',          '>= 0.9.0'
-  gem 'bunny',         '>= 0.7.9'
-end
+gem 'amq-client',    '>= 0.9.0'
+gem 'amqp',          '>= 0.9.0'
+gem 'bunny',         '~> 1.7.1'
 
-platform :jruby do
-  gem 'march_hare'
-  gem 'net-ssh-shell', '~> 0.2.0'
-  gem 'jruby-openssl', '~> 0.8.8'
-end
 
 group :test do
   gem 'rake',          '~> 0.9.2'
