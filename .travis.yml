@@ -2,6 +2,7 @@ language: ruby
 
 rvm:
   - 1.9.3
+  - 2.2.2
   - jruby-19mode
   - jruby-head
 
@@ -14,16 +15,30 @@ services:
 
 sudo: false
 
+gemfile:
+  - Gemfile
+  - gemfiles/gemfile_193
+
 cache: bundler
 
 matrix:
   exclude:
+    - rvm: 2.2.2
+      jdk: openjdk7
     - rvm: 1.9.3
       jdk: openjdk7
     - rvm: 1.9.3
       jdk: oraclejdk7
     - rvm: jruby-head
       jdk: openjdk6
+    - rvm: 2.2.2
+      gemfile: gemfiles/gemfile_193
+    - rvm: jruby-head
+      gemfile: gemfiles/gemfile_193
+    - rvm: jruby-19mode
+      gemfile: gemfiles/gemfile_193
+    - rvm: 1.9.3
+      gemfile: Gemfile
   allow_failures:
     - rvm: jruby-head
       jdk: openjdk7
