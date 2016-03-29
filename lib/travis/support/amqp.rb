@@ -27,6 +27,11 @@ Travis::Amqp::Consumer.class_eval do
     def workers
       new('reporting.workers')
     end
+
+    def builds(routing_key, options = {})
+      options = { exchange: { name: 'reporting' } }.deep_merge(options)
+      new("reporting.builds.#{routing_key}", options)
+    end
   end
 end
 
