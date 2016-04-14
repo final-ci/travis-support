@@ -11,8 +11,6 @@ gem 'metriks',         :git => 'https://github.com/roidrage/metriks.git', :ref =
 gem 'sentry-raven',    :github => 'getsentry/raven-ruby'
 
 platform :mri do
-  gem 'amq-client',    '>= 0.9.0'
-  gem 'amqp',          '>= 0.9.0'
   gem 'bunny',         '>= 0.7.9'
 end
 
